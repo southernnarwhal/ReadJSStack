@@ -18,25 +18,143 @@
 <body>
     <div id="viewDiv"></div>
     <script>
-        require(["esri/config", "esri/Map", "esri/views/MapView"], function(esriConfig, Map, MapView) {
+        require([  
+                    "esri/config",  
+                    "esri/Map",  
+                    "esri/views/MapView",   
+                    "esri/Graphic",  
+                    "esri/layers/GraphicsLayer",
+                    //adding in the module for the feature layers
+                    "esri/layers/FeatureLayer"   
+
+                    ], function(esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer) {
             esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurO2PIuQbn2dr1LG393YMOWIrVnI9xBLty7Y4H28CTPJuvXVzFsnCzJ-6kTZ67FoQ0i5TFb9nYiOuMvw6YSexr6N4MDCmDYyOIuJ2Wr0x41ytZe6-vwEr-TAvyItp8B8DDXGfIzzm5qaidAxLO5YsczQQc6HI3zDHjAbzTAgikFg7NLNwWSDxl1fUqRbQmF-HLHo9fHTtHgUAS6LLEt7nS3g.AT1_DcIO5Ss"; // Replace with your actual access token
 
             const map = new Map({
-                basemap: "streets" // Change basemap to a more colorful topographic basemap
+                basemap: "satellite" // Change basemap to a more colorful topographic basemap
             });
 
             const view = new MapView({
                 map: map,
                 center: [-82.1232, 38.8448], // Longitude, latitude for Point Pleasant, WV
-                zoom: 13, // Zoom in for a closer view
+                zoom: 13.6, // Zoom in for a closer view
                 container: "viewDiv" // Div element
             });
 
-            view.when(() => {
-                console.log("Map and View are ready");
-            }, (error) => {
-                console.error("Error: ", error);
+            const graphicsLayer = new GraphicsLayer();  
+                map.add(graphicsLayer);
+            const point = { //Create a point  
+                type: "point",  
+                longitude: -82.1385,    //long lat of Mothman Statue
+                latitude: 38.8426
+            };
+                const simpleMarkerSymbol = {  
+                type: "simple-marker", 
+                style: "triangle", 
+                color: [255, 255, 0],  // Color of the light
+                size: "16px",  // Size of the light
+                outline: {  
+                    color: [0, 0, 0], // Black  
+                    width: 1
+                }  
+            
+            };
+            const popupTemplate = {
+                title: "{Name}",
+                content: "{Description}"
+            }
+                const attributes = {
+                    Name: "Mothman Statue",
+                    Description: "A shiny, polished sculpture of the Mothman, a cryptid that flies through the West Virginia skies."
+                }
+                const pointGraphic = new Graphic({  
+                geometry: point,  
+                symbol: simpleMarkerSymbol,
+
+                attributes: attributes,
+                popupTemplate: popupTemplate  
             });
+            
+
+            graphicsLayer.add(pointGraphic);
+
+            // Polyline for Mothman flight path or sightings route
+            const polyline = {
+                type: "polyline",
+                paths: [
+                    [-82.1282, 38.8483], // Point Pleasant, WV - original location
+                    [-82.1250, 38.8520], // Near the TNT area, rumored Mothman sighting
+                    [-82.1200, 38.8500], // Close to the Ohio Riverbank
+                    [-82.1300, 38.8470], // Nearby forested area
+                    [-82.1375, 38.8448], // Old road near Point Pleasant
+                    [-82.1400, 38.8490], // Near an abandoned building
+                    [-82.1440, 38.8450], // A distant sighting spot in the hills
+                    [-82.1470, 38.8485], // Nearby waterway edge
+                    [-82.1500, 38.8510], // Near Mason County golf course
+                    [-82.1550, 38.8460], // Uninhabited region to the west of town
+                    [-82.1600, 38.8505], // Another rural sighting location
+                    [-82.1650, 38.8480]  // Edge of town, heading south
+                ]
+            };
+            const polylineSymbol = {
+                type: "simple-line",
+                color: [226, 119, 40], // Orange
+                width: 2
+            };
+
+            const polylineGraphic = new Graphic({
+                geometry: polyline,
+                symbol: polylineSymbol
+            });
+
+            // Polygon for the no-entry or habitat zone
+            const polygon = {
+                type: "polygon",
+                rings: [
+                [-82.1300, 38.8480], // Point 1
+                [-82.1280, 38.8500], // Point 2
+                [-82.1250, 38.8495], // Point 3
+                [-82.1260, 38.8465], // Point 4
+                [-82.1295, 38.8460], // Point 5
+                [-82.1300, 38.8480]  // Closing back to Point 1
+                ]
+            };
+
+            const polygonSymbol = {
+                type: "simple-fill",
+                color: [139, 0, 0, 0.9], // Semi-transparent red
+                outline: {
+                    color: [255, 255, 255],
+                    width: 1
+                }
+            };
+
+            const polygonGraphic = new Graphic({
+                geometry: polygon,
+                symbol: polygonSymbol
+            });
+
+            // Add to GraphicsLayer
+            graphicsLayer.addMany([polylineGraphic, polygonGraphic]);
+            
+
+            // Define a pop-up for epaBrownLayer
+const popupBrown = {
+  "title": "Sites",
+  "content": "<b>EPA ID:</b> {REGISTRY_ID}<br><b>Location:</b> {LOCATION_ADDRESS}<br>"
+}
+
+            //adding the Const for the feature layer
+            const epaBrownLayer = new FeatureLayer({
+            url: "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/FRS_INTERESTS_ACRES/FeatureServer",
+
+            //adding the popup here
+            outFields: ["REGISTRY_ID","LOCATION_ADDRESS"],
+            popupTemplate: popupBrown
+            });
+
+            //adding the feature layer to the map
+            map.add(epaBrownLayer);
         });
     </script>
 </body>
