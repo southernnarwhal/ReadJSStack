@@ -141,7 +141,7 @@
             // Define a pop-up for epaBrownLayer
 const popupBrown = {
   "title": "Sites",
-  "content": "<b>EPA ID:</b> {REGISTRY_ID}<br><b>Location:</b> {LOCATION_ADDRESS}<br>"
+  "content": "<b>EPA ID:</b> {REGISTRY_ID}<br><b>Location:</b> {LOCATION_ADDRESS}<br><b>City:</b> {CITY_NAME}<br><b>State:</b> {STATE_CODE}<br><b>Program Link:</b> {PROGRAM_URL}<br>"
 }
 
             //adding the Const for the feature layer
@@ -149,7 +149,7 @@ const popupBrown = {
             url: "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/FRS_INTERESTS_ACRES/FeatureServer",
 
             //adding the popup here
-            outFields: ["REGISTRY_ID","LOCATION_ADDRESS"],
+            outFields: ["REGISTRY_ID","LOCATION_ADDRESS","CITY_NAME","STATE_CODE","PROGRAM_URL"],
             popupTemplate: popupBrown
             });
 
