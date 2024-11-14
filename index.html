@@ -10,7 +10,7 @@
             margin: 0;
             height: 100%;
             width: 100%;
-        }
+        };
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.30/"></script>
@@ -129,11 +129,25 @@
                 }
             };
 
-            const polygonGraphic = new Graphic({
+            const polygonGraphic1 = new Graphic({
                 geometry: polygon,
                 symbol: polygonSymbol
             });
+            const popupPolygon = {
+                title: "{Name}",
+                content: "{Description}"
+            }
+                const polyattributes = {
+                    Name: "Mothman Sighting Path",
+                    Description: "The orange line represents the no-entry or habitat zone of the Mothman in Point Pleasant, WV."
+                }
 
+            const polygonGraphic = new Graphic({
+                geometry: polygon,
+                symbol: polygonSymbol,
+                attributes: polyattributes,
+                popupTemplate: popupPolygon 
+            });
             // Add to GraphicsLayer
             graphicsLayer.addMany([polylineGraphic, polygonGraphic]);
             
@@ -155,6 +169,22 @@ const popupBrown = {
 
             //adding the feature layer to the map
             map.add(epaBrownLayer);
+
+            const popupAirport = {
+  "title": "Airport",
+  "content": "<b>Facility Name:</b> {Fac_Name}<br>"
+}
+
+            //adding the Const for the feature layer
+            const airportLayer = new FeatureLayer({
+                url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/US_Airports_Mothman/FeatureServer",
+
+            //adding the popup here
+            outFields: ["Fac_Name"],
+            popupTemplate: popupAirport
+            });
+            // Add the airport layer to the map
+            map.add(airportLayer);
         });
     </script>
 </body>
