@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Hello, AGOL!</title>
-    <style>
-        html, body, #viewDiv {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css">
-    <script src="https://js.arcgis.com/4.30/"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Hello, AGOL!</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.20/"></script>
 </head>
 <body>
-    <div id="viewDiv"></div>
-    <script>
-        require(["esri/config", "esri/Map", "esri/views/MapView"], function(esriConfig, Map, MapView) {
-            esriConfig.apiKey = "YOUR_ACCESS_TOKEN"; // Replace with your actual access token
+  <div id="viewDiv"></div>
+  <script>
+    require([
+      "esri/config",
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/layers/GraphicsLayer",
+      "esri/layers/FeatureLayer"
+    ], function (esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer) {
+      esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurO2PIuQbn2dr1LG393YMOWIrVnI9xBLty7Y4H28CTPJuvXVzFsnCzJ-6kTZ67FoQ0i5TFb9nYiOuMvw6YSexr6N4MDCmDYyOIuJ2Wr0x41ytZe6-vwEr-TAvyItp8B8DDXGfIzzm5qaidAxLO5YsczQQc6HI3zDHjAbzTAgikFg7NLNwWSDxl1fUqRbQmF-HLHo9fHTtHgUAS6LLEt7nS3g"; // Replace with your actual access token
 
-            const map = new Map({
-                basemap: "oceans" // Change basemap to "oceans"
-            });
+      const map = new Map({
+        basemap: "satellite" // use satellite basemap
+      });
 
             const view = new MapView({
                 map: map,
-                center: [-92.1005, 46.7867], // Longitude, latitude for Duluth, MN
-                zoom: 10, // Adjusted zoom level for city view
+                center: [150.5, 53.5], // Longitude, latitude for Sea of Okhotsk
+                zoom: 4, // Adjusted zoom level to make Japan and Siberia visible
                 container: "viewDiv" // Div element
             });
 
